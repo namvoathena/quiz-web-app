@@ -1,5 +1,6 @@
 import { getQuestions } from './questions.js';
 import { createScoring } from './scoring.js';
+import { createTimer, getTimerState } from './timer.js';
 
 // --- DOM Cache ---
 const startScreen = document.getElementById('start-screen');
@@ -14,6 +15,9 @@ const answersContainer = document.getElementById('answers-container');
 const questionNumber = document.getElementById('question-number');
 const scoreDisplay = document.getElementById('score-display');
 
+const timerDisplay = document.getElementById('timer-display');
+const timerBar = document.getElementById('timer-bar');
+
 const finalScore = document.getElementById('final-score');
 const accuracy = document.getElementById('accuracy');
 const totalTime = document.getElementById('total-time');
@@ -23,6 +27,27 @@ let questions = [];
 let currentIndex = 0;
 let startTime = 0;
 const scoring = createScoring();
+
+function handleTimerTick(timeLeft, total) {
+  timerDisplay.textContent = timeLeft;
+  timerBar.style.width = `${(timeLeft / total) * 100}%`;
+
+  const state = getTimerState(timeLeft);
+  timerDisplay.classList.remove('warning', 'danger');
+  timerBar.classList.remove('warning', 'danger');
+  if (state !== 'normal') {
+    timerDisplay.classList.add(state);
+    timerBar.classList.add(state);
+  }
+}
+
+function handleTimerExpire() {
+  scoring.recordAnswer(false);
+  updateScore();
+  nextQuestion();
+}
+
+const timer = createTimer(handleTimerTick, handleTimerExpire);
 
 // --- Screen Management ---
 function showScreen(screen) {
@@ -56,9 +81,12 @@ function showQuestion() {
     btn.addEventListener('click', () => selectAnswer(index));
     answersContainer.appendChild(btn);
   });
+
+  timer.start();
 }
 
 function selectAnswer(index) {
+  timer.stop();
   const q = questions[currentIndex];
   scoring.recordAnswer(index === q.correct);
   updateScore();
@@ -70,6 +98,7 @@ function nextQuestion() {
   if (currentIndex < questions.length) {
     showQuestion();
   } else {
+    timer.stop();
     showResults();
   }
 }
