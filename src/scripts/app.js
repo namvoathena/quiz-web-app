@@ -1,5 +1,5 @@
-import { CONFIG } from './config.js';
 import { getQuestions } from './questions.js';
+import { createScoring } from './scoring.js';
 
 // --- DOM Cache ---
 const startScreen = document.getElementById('start-screen');
@@ -21,9 +21,8 @@ const totalTime = document.getElementById('total-time');
 // --- Game State ---
 let questions = [];
 let currentIndex = 0;
-let score = 0;
-let correctCount = 0;
 let startTime = 0;
+const scoring = createScoring();
 
 // --- Screen Management ---
 function showScreen(screen) {
@@ -37,8 +36,7 @@ function showScreen(screen) {
 function startQuiz() {
   questions = getQuestions();
   currentIndex = 0;
-  score = 0;
-  correctCount = 0;
+  scoring.reset();
   startTime = Date.now();
   updateScore();
   showScreen(quizScreen);
@@ -62,12 +60,7 @@ function showQuestion() {
 
 function selectAnswer(index) {
   const q = questions[currentIndex];
-
-  if (index === q.correct) {
-    score += CONFIG.POINTS_PER_QUESTION;
-    correctCount++;
-  }
-
+  scoring.recordAnswer(index === q.correct);
   updateScore();
   nextQuestion();
 }
@@ -82,15 +75,14 @@ function nextQuestion() {
 }
 
 function updateScore() {
-  scoreDisplay.textContent = `Score: ${score}`;
+  scoreDisplay.textContent = `Score: ${scoring.getScore()}`;
 }
 
 function showResults() {
   const elapsed = Math.round((Date.now() - startTime) / 1000);
-  const pct = Math.round((correctCount / questions.length) * 100);
 
-  finalScore.textContent = score;
-  accuracy.textContent = `${pct}%`;
+  finalScore.textContent = scoring.getScore();
+  accuracy.textContent = `${scoring.getAccuracy(questions.length)}%`;
   totalTime.textContent = `${elapsed}s`;
 
   showScreen(resultsScreen);
