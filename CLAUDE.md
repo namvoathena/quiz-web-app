@@ -10,14 +10,10 @@
 
 ## Architecture
 
-- index.html — entry point, all screens (start, quiz, results)
-- src/scripts/config.js — game constants (points, timers, streak thresholds)
-- src/scripts/questions.js — question bank (10+ questions, multiple categories)
-- src/scripts/app.js — quiz engine (flow, timer, scoring, UI updates)
-- src/scripts/leaderboard.js — top 10 scores in localStorage
-- src/scripts/audio.js — Web Audio API sound effects
-- src/styles/index.css — all styles, animations, responsive layout
-- tests/ — jest tests for app, leaderboard, questions
+- index.html — entry point, contains all screen layouts (start, quiz, results)
+- src/scripts/ — quiz engine, game config, question bank, leaderboard, and audio logic
+- src/styles/ — all styles, animations, and responsive layout
+- tests/ — jest unit tests for core modules
 
 ## Coding Conventions
 
