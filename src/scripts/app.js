@@ -1,6 +1,7 @@
 import { getQuestions } from './questions.js';
 import { createScoring } from './scoring.js';
 import { createTimer, getTimerState } from './timer.js';
+import { calculateResults, formatResults } from './results.js';
 
 // --- DOM Cache ---
 const startScreen = document.getElementById('start-screen');
@@ -108,11 +109,12 @@ function updateScore() {
 }
 
 function showResults() {
-  const elapsed = Math.round((Date.now() - startTime) / 1000);
+  const results = calculateResults(scoring, questions.length, startTime, Date.now());
+  const formatted = formatResults(results);
 
-  finalScore.textContent = scoring.getScore();
-  accuracy.textContent = `${scoring.getAccuracy(questions.length)}%`;
-  totalTime.textContent = `${elapsed}s`;
+  finalScore.textContent = formatted.score;
+  accuracy.textContent = formatted.accuracy;
+  totalTime.textContent = formatted.totalTime;
 
   showScreen(resultsScreen);
 }
