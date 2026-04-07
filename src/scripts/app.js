@@ -3,6 +3,7 @@ import { getQuestions } from './questions.js';
 import { createScoring } from './scoring.js';
 import { createTimer, getTimerState } from './timer.js';
 import { calculateResults, formatResults } from './results.js';
+import { applyTheme, getSavedTheme } from './theme.js';
 
 // --- DOM Cache ---
 const startScreen = document.getElementById('start-screen');
@@ -27,6 +28,7 @@ const accuracy = document.getElementById('accuracy');
 const totalTime = document.getElementById('total-time');
 
 const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+const themeBtns = document.querySelectorAll('.theme-btn');
 
 // --- Game State ---
 let questions = [];
@@ -155,6 +157,26 @@ difficultyBtns.forEach((btn) => {
   });
 });
 
+// --- Theme Selection ---
+function initTheme() {
+  const saved = getSavedTheme();
+  applyTheme(saved);
+  themeBtns.forEach((btn) => {
+    btn.classList.toggle('selected', btn.dataset.theme === saved);
+  });
+}
+
+themeBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    themeBtns.forEach((b) => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    applyTheme(btn.dataset.theme);
+  });
+});
+
 // --- Event Listeners ---
 startBtn.addEventListener('click', startQuiz);
 restartBtn.addEventListener('click', () => showScreen(startScreen));
+
+// --- Init ---
+initTheme();

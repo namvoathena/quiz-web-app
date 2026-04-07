@@ -15,6 +15,7 @@
   --card-bg: #ffffff;
   --text: #2d3436;
   --text-light: #636e72;
+  --accent: #f0eeff;
   --radius: 12px;
   --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -51,6 +52,62 @@ body {
 .start-screen p {
   color: var(--text-light);
   margin-bottom: 1.5rem;
+}
+
+/* --- Theme Selector --- */
+.theme-selector {
+  margin-bottom: 1.5rem;
+}
+
+.theme-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.theme-options {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--card-bg);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.theme-btn:hover {
+  border-color: var(--primary);
+}
+
+.theme-btn.selected {
+  border-color: var(--primary);
+  background: var(--accent);
+}
+
+.theme-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* --- Difficulty Selector --- */
@@ -94,12 +151,12 @@ body {
 
 .difficulty-btn:hover {
   border-color: var(--primary);
-  background: #f0eeff;
+  background: var(--accent);
 }
 
 .difficulty-btn.selected {
   border-color: var(--primary);
-  background: #f0eeff;
+  background: var(--accent);
   color: var(--primary);
 }
 
@@ -128,7 +185,7 @@ body {
   padding: 0.35rem 0.75rem;
   margin-bottom: 0.75rem;
   border-radius: var(--radius);
-  background: #f0eeff;
+  background: var(--accent);
   transition: all 0.3s ease;
 }
 
@@ -244,7 +301,7 @@ body {
 
 .answer-btn:hover {
   border-color: var(--primary);
-  background: #f0eeff;
+  background: var(--accent);
 }
 
 /* --- Results Screen --- */
