@@ -63,6 +63,43 @@ body {
   color: var(--text-light);
 }
 
+/* --- Streak --- */
+.streak-display {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  padding: 0.35rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius);
+  background: #f0eeff;
+  transition: all 0.3s ease;
+}
+
+.streak-2x {
+  color: #e17055;
+  background: #fef0ec;
+  animation: streak-pop 0.4s ease;
+}
+
+.streak-3x {
+  color: var(--correct);
+  background: #e6f9f3;
+  animation: streak-pop 0.4s ease;
+}
+
+@keyframes streak-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* --- Timer --- */
 .timer-display {
   font-size: 1.1rem;

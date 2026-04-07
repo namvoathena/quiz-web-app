@@ -15,6 +15,8 @@ const questionText = document.getElementById('question-text');
 const answersContainer = document.getElementById('answers-container');
 const questionNumber = document.getElementById('question-number');
 const scoreDisplay = document.getElementById('score-display');
+const streakDisplay = document.getElementById('streak-display');
+const streakText = document.getElementById('streak-text');
 
 const timerDisplay = document.getElementById('timer-display');
 const timerBar = document.getElementById('timer-bar');
@@ -45,6 +47,7 @@ function handleTimerTick(timeLeft, total) {
 function handleTimerExpire() {
   scoring.recordAnswer(false);
   updateScore();
+  updateStreak();
   nextQuestion();
 }
 
@@ -65,6 +68,7 @@ function startQuiz() {
   scoring.reset();
   startTime = Date.now();
   updateScore();
+  streakDisplay.hidden = true;
   showScreen(quizScreen);
   showQuestion();
 }
@@ -91,6 +95,7 @@ function selectAnswer(index) {
   const q = questions[currentIndex];
   scoring.recordAnswer(index === q.correct);
   updateScore();
+  updateStreak();
   nextQuestion();
 }
 
@@ -106,6 +111,23 @@ function nextQuestion() {
 
 function updateScore() {
   scoreDisplay.textContent = `Score: ${scoring.getScore()}`;
+}
+
+function updateStreak() {
+  const streak = scoring.getStreak();
+  const multiplier = scoring.getMultiplier();
+
+  if (multiplier > 1) {
+    streakDisplay.hidden = false;
+    streakText.textContent = `${streak} streak! ${multiplier}x points`;
+    streakDisplay.className = `streak-display streak-${multiplier}x`;
+  } else if (streak > 0) {
+    streakDisplay.hidden = false;
+    streakText.textContent = `${streak} in a row`;
+    streakDisplay.className = 'streak-display';
+  } else {
+    streakDisplay.hidden = true;
+  }
 }
 
 function showResults() {
