@@ -44,6 +44,14 @@ describe('createTimer', () => {
     expect(timer.getTimeLeft()).toBe(CONFIG.TIMER_SECONDS);
   });
 
+  test('start accepts custom duration', () => {
+    const onTick = jest.fn();
+    const timer = createTimer(onTick, () => {});
+    timer.start(20);
+    expect(timer.getTimeLeft()).toBe(20);
+    expect(onTick).toHaveBeenCalledWith(20, 20);
+  });
+
   test('calls onTick immediately on start with full time', () => {
     const onTick = jest.fn();
     const timer = createTimer(onTick, () => {});
@@ -62,6 +70,19 @@ describe('createTimer', () => {
 
     jest.advanceTimersByTime(1000);
     expect(onTick).toHaveBeenCalledWith(CONFIG.TIMER_SECONDS - 2, CONFIG.TIMER_SECONDS);
+  });
+
+  test('custom duration expires at correct time', () => {
+    const onExpire = jest.fn();
+    const timer = createTimer(() => {}, onExpire);
+    timer.start(10);
+
+    jest.advanceTimersByTime(9000);
+    expect(onExpire).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    expect(onExpire).toHaveBeenCalledTimes(1);
+    expect(timer.isRunning()).toBe(false);
   });
 
   test('calls onExpire when time reaches 0', () => {
@@ -134,5 +155,97 @@ describe('createTimer', () => {
 
     jest.advanceTimersByTime(3000);
     expect(timer.getTimeLeft()).toBe(CONFIG.TIMER_SECONDS - 3);
+  });
+});
+
+describe('difficulty levels', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test('CONFIG has three difficulty levels with correct timer values', () => {
+    expect(CONFIG.DIFFICULTY.easy.timerSeconds).toBe(20);
+    expect(CONFIG.DIFFICULTY.medium.timerSeconds).toBe(15);
+    expect(CONFIG.DIFFICULTY.hard.timerSeconds).toBe(10);
+  });
+
+  test('default difficulty is medium', () => {
+    expect(CONFIG.DEFAULT_DIFFICULTY).toBe('medium');
+    expect(CONFIG.DIFFICULTY[CONFIG.DEFAULT_DIFFICULTY].timerSeconds).toBe(CONFIG.TIMER_SECONDS);
+  });
+
+  test('easy difficulty runs for 20 seconds', () => {
+    const onTick = jest.fn();
+    const onExpire = jest.fn();
+    const timer = createTimer(onTick, onExpire);
+    const duration = CONFIG.DIFFICULTY.easy.timerSeconds;
+
+    timer.start(duration);
+    expect(timer.getTimeLeft()).toBe(20);
+    expect(onTick).toHaveBeenCalledWith(20, 20);
+
+    jest.advanceTimersByTime(19000);
+    expect(onExpire).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    expect(onExpire).toHaveBeenCalledTimes(1);
+  });
+
+  test('medium difficulty runs for 15 seconds', () => {
+    const onExpire = jest.fn();
+    const timer = createTimer(() => {}, onExpire);
+    const duration = CONFIG.DIFFICULTY.medium.timerSeconds;
+
+    timer.start(duration);
+    expect(timer.getTimeLeft()).toBe(15);
+
+    jest.advanceTimersByTime(14000);
+    expect(onExpire).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    expect(onExpire).toHaveBeenCalledTimes(1);
+  });
+
+  test('hard difficulty runs for 10 seconds', () => {
+    const onTick = jest.fn();
+    const onExpire = jest.fn();
+    const timer = createTimer(onTick, onExpire);
+    const duration = CONFIG.DIFFICULTY.hard.timerSeconds;
+
+    timer.start(duration);
+    expect(timer.getTimeLeft()).toBe(10);
+    expect(onTick).toHaveBeenCalledWith(10, 10);
+
+    jest.advanceTimersByTime(9000);
+    expect(onExpire).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(1000);
+    expect(onExpire).toHaveBeenCalledTimes(1);
+  });
+
+  test('switching difficulty between starts uses new duration', () => {
+    const onTick = jest.fn();
+    const timer = createTimer(onTick, () => {});
+
+    timer.start(CONFIG.DIFFICULTY.easy.timerSeconds);
+    expect(timer.getTimeLeft()).toBe(20);
+
+    jest.advanceTimersByTime(5000);
+    timer.stop();
+
+    onTick.mockClear();
+    timer.start(CONFIG.DIFFICULTY.hard.timerSeconds);
+    expect(timer.getTimeLeft()).toBe(10);
+    expect(onTick).toHaveBeenCalledWith(10, 10);
+  });
+
+  test('each difficulty level has a label', () => {
+    expect(CONFIG.DIFFICULTY.easy.label).toBe('Easy');
+    expect(CONFIG.DIFFICULTY.medium.label).toBe('Medium');
+    expect(CONFIG.DIFFICULTY.hard.label).toBe('Hard');
   });
 });

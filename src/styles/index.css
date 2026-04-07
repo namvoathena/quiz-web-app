@@ -50,7 +50,63 @@ body {
 
 .start-screen p {
   color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+/* --- Difficulty Selector --- */
+.difficulty-selector {
   margin-bottom: 2rem;
+}
+
+.difficulty-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.difficulty-options {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.difficulty-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--card-bg);
+  border: 2px solid #e0e0e0;
+  border-radius: var(--radius);
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.difficulty-btn:hover {
+  border-color: var(--primary);
+  background: #f0eeff;
+}
+
+.difficulty-btn.selected {
+  border-color: var(--primary);
+  background: #f0eeff;
+  color: var(--primary);
+}
+
+.difficulty-time {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-light);
 }
 
 /* --- Quiz Screen --- */

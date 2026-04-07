@@ -1,3 +1,4 @@
+import { CONFIG } from './config.js';
 import { getQuestions } from './questions.js';
 import { createScoring } from './scoring.js';
 import { createTimer, getTimerState } from './timer.js';
@@ -25,10 +26,13 @@ const finalScore = document.getElementById('final-score');
 const accuracy = document.getElementById('accuracy');
 const totalTime = document.getElementById('total-time');
 
+const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+
 // --- Game State ---
 let questions = [];
 let currentIndex = 0;
 let startTime = 0;
+let selectedDifficulty = CONFIG.DEFAULT_DIFFICULTY;
 const scoring = createScoring();
 
 function handleTimerTick(timeLeft, total) {
@@ -87,7 +91,8 @@ function showQuestion() {
     answersContainer.appendChild(btn);
   });
 
-  timer.start();
+  const duration = CONFIG.DIFFICULTY[selectedDifficulty].timerSeconds;
+  timer.start(duration);
 }
 
 function selectAnswer(index) {
@@ -141,6 +146,15 @@ function showResults() {
   showScreen(resultsScreen);
 }
 
+// --- Difficulty Selection ---
+difficultyBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    difficultyBtns.forEach((b) => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedDifficulty = btn.dataset.difficulty;
+  });
+});
+
 // --- Event Listeners ---
 startBtn.addEventListener('click', startQuiz);
-restartBtn.addEventListener('click', startQuiz);
+restartBtn.addEventListener('click', () => showScreen(startScreen));

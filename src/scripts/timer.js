@@ -2,16 +2,18 @@ import { CONFIG } from './config.js';
 
 export function createTimer(onTick, onExpire) {
   let timeLeft = 0;
+  let totalSeconds = CONFIG.TIMER_SECONDS;
   let intervalId = null;
 
-  function start() {
+  function start(duration) {
     stop();
-    timeLeft = CONFIG.TIMER_SECONDS;
-    onTick(timeLeft, CONFIG.TIMER_SECONDS);
+    totalSeconds = duration !== undefined ? duration : CONFIG.TIMER_SECONDS;
+    timeLeft = totalSeconds;
+    onTick(timeLeft, totalSeconds);
 
     intervalId = setInterval(() => {
       timeLeft--;
-      onTick(timeLeft, CONFIG.TIMER_SECONDS);
+      onTick(timeLeft, totalSeconds);
 
       if (timeLeft <= 0) {
         stop();
