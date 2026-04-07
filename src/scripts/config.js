@@ -1,0 +1,5 @@
+export const CONFIG = {
+  POINTS_PER_QUESTION: 10,
+  TIMER_SECONDS: 15,
+  TOTAL_QUESTIONS: 10,
+};

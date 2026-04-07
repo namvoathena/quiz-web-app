@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "npx serve . -l 3000",
-    "test": "jest",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "lint": "eslint src/ tests/",
     "format": "prettier --write \"src/**/*.{js,css,html}\" \"tests/**/*.js\" \"*.html\""
   },
@@ -19,6 +19,7 @@
     "serve": "^14.0.0"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "transform": {}
   }
 }
